@@ -1,0 +1,6 @@
+{
+    "name": "layout-lens-firefox",
+    "scripts": {
+        "start": "web-ext run"
+    }
+}

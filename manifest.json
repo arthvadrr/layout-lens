@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "Layout Lens",
+  "version": "1.0",
+  "description": "Designed to show the current layout of all elements on the page to help with writing CSS",
+  "icons": {
+    "48": "lens-logo.svg",
+    "96": "lens-logo.svg"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "browser_action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "48": "lens-logo.svg",
+      "96": "lens-logo.svg"
+    }
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "layoutlens@example.com"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["index.js"]
+    }
+  ]
+}
