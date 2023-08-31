@@ -1,7 +1,9 @@
-const titles = document.querySelectorAll('h1');
+const { runtime } = browser
 
-titles.forEach((thing) => {
-    thing.innerText = 'HI'
-})
+let options = {
+    appToggle: true,
+    opacity: 0.5,
+    currentTab: 0,
+}
 
-console.log('HEILLOOO');
+runtime.onMessage.addListener(message => options = message || {})
