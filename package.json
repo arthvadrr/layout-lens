@@ -1,6 +1,16 @@
 {
     "name": "layout-lens-firefox",
+    "type": "module",
     "scripts": {
-        "start": "web-ext run"
+        "start": "concurrently 'rollup -c' 'web-ext run'"
+    },
+    "devDependencies": {
+        "@rollup/plugin-babel": "^6.0.3",
+        "@rollup/plugin-terser": "^0.4.3",
+        "concurrently": "^8.2.1",
+        "postcss-flexbugs-fixes": "^5.0.2",
+        "rollup": "^3.28.1",
+        "rollup-plugin-postcss": "^4.0.2",
+        "sass": "^1.66.1"
     }
 }
