@@ -3,10 +3,10 @@ import postcss from 'rollup-plugin-postcss'
 import terser from '@rollup/plugin-terser'
 
 const addPlugins = () => {
-    postcss({
+    return postcss({
         extract: true,
         minimize: true,
-        use: ['sass']
+        use: ['sass'],
     })
 }
 
@@ -15,7 +15,16 @@ export default [
         input: './styles/index.scss',
         output: {
             name: 'styles',
-            file: './index.min.scss',
+            file: './index.min.css',
+            format: 'es'
+        },
+        plugins: addPlugins()
+    },
+    {
+        input: './popup/styles/popup.scss',
+        output: {
+            name: 'styles',
+            file: './popup/popup.min.css',
             format: 'es'
         },
         plugins: addPlugins()
