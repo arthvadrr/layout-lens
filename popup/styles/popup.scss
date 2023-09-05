@@ -1,2 +1,55 @@
 @use "fonts";
 @use "page";
+
+
+.form-wrapper {
+
+    .toggle {
+        display: none;
+    }
+
+    .toggle-label {
+        display: inline-block;
+        position: relative;
+        margin-bottom: 2rem;
+        font-size: 14px;
+    }
+
+    .toggle-label::before,
+    .toggle-label::after {
+        content: "";
+        position: relative;
+        display: inline-block;
+        transition: all 140ms;
+        top: 3px;
+    }
+
+    .toggle-label::before {
+        height: 15px;
+        width: 32px;
+        background-color: #504E5F;
+        border: 1px solid #403E4C;
+        border-radius: 20px;
+        margin-right: 10px;
+    }
+
+    .toggle-label::after {
+        position: absolute;
+        height: 13px;
+        width: 13px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        left: 2px;
+        top: 5px;
+    }
+
+    .toggle:checked + .toggle-label {
+        &::before {
+            background-color: #0F6A7B;
+        }
+
+        &::after {
+            left: 19px;
+        }
+    }
+}
