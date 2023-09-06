@@ -8,8 +8,10 @@
     "96": "lens-logo.svg"
   },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "devtools"
   ],
+  "devtools_page": "devtools/layoutlens.html",
   "browser_action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
