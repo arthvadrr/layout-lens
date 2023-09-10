@@ -18,8 +18,10 @@ body {
         justify-content: center;
         align-items: center;
         align-content: center;
-        opacity: 0.8;
-        color: #000000;
+        background-color: #ffffff;
+        color: #333333;
+        opacity: 1;
+        border: 1px solid #444444;
     
         .layoutlens__padding,
         .layoutlens__margin {
@@ -28,10 +30,15 @@ body {
             display: block;
             height: 100%;
             width: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.5;
         }
 
         .layoutlens__margin {
-            box-sizing: none;
+            box-sizing: content-box;
+            border: 10px solid red;
+            opacity: 0.2;
         }
     }
 }

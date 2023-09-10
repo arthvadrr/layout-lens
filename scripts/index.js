@@ -8,7 +8,7 @@ const statePromise = new Promise((resolve, reject) => {
         resolve('Layout lens options found')
     } else {
         options = {
-            appToggle: true,
+            appToggle: false,
             opacity: 0.5,
             currentTab: 0,
             paddingColor: "#D8A658",
@@ -46,6 +46,11 @@ const updateOverlayStyles = (ele, color, overlay, margin, padding) => {
     const computedStyles = window.getComputedStyle(ele)
     const rect = ele.getBoundingClientRect()
 
+    let fontSize = rect.height * 0.30;
+
+    if (fontSize > 22) fontSize = 22
+    else if (fontSize < 12) fontSize = 12
+
     const infoOverlay = document.createElement('div')
     
     overlay.innerText = `${ele.tagName}`
@@ -61,13 +66,13 @@ const updateOverlayStyles = (ele, color, overlay, margin, padding) => {
             top: computedStyles.paddingTop,
             bottom: computedStyles.paddingBottom,
             left: computedStyles.paddingLeft,
-            right: computedStyles.paddingRight
+            right: computedStyles.paddingRight,
         },
         margin: {
             top: computedStyles.marginTop,
             bottom: computedStyles.marginBottom,
             left: computedStyles.marginLeft,
-            right: computedStyles.marginRight
+            right: computedStyles.marginRight,
         }
     }
 
@@ -75,17 +80,22 @@ const updateOverlayStyles = (ele, color, overlay, margin, padding) => {
     padding.style.borderTop = `${styles.padding.top} solid ${options.paddingColor}`
     padding.style.borderLeft = `${styles.padding.left} solid ${options.paddingColor}`
     padding.style.borderRight = `${styles.padding.right} solid ${options.paddingColor}`
+    padding.style.borderRadius = `${computedStyles.borderRadius}`
     margin.style.borderBottom = `${styles.margin.bottom} solid ${options.marginColor}`
     margin.style.borderTop = `${styles.margin.top} solid ${options.marginColor}`
     margin.style.borderLeft = `${styles.margin.left} solid ${options.marginColor}`
     margin.style.borderRight = `${styles.margin.right} solid ${options.marginColor}`
+    margin.style.top = `-${styles.margin.top}`
+    margin.style.left = `-${styles.margin.left}`
     overlay.style.width = `${rect.width}px`
     overlay.style.height = `${rect.height}px`
+    overlay.style.fontSize = `${fontSize}px`
+    overlay.style.borderRadius = `${computedStyles.borderRadius}`
 }
 
 const main = () => {
     console.log('running main')
-    const eles = document.querySelectorAll('body *')
+    const eles = document.querySelectorAll('*')
     
     let layoutLensContainer = document.querySelector('.layoutlens__container') || document.createElement('div')
     layoutLensContainer.classList.add('layoutlens__container')
@@ -96,8 +106,6 @@ const main = () => {
         const margin = document.createElement('div')
         const padding = document.createElement('div')
 
-        overlay.style.backgroundColor = color
-        overlay.style.pointerEvents = 'none'
         overlay.setAttribute('aria-hidden', 'true')  
         overlay.classList.add('layoutlens__overlay')
         margin.classList.add('layoutlens__margin')
@@ -116,8 +124,8 @@ const main = () => {
         // mObserver.observe(ele, mObserverConfig)
         // iObserver.observe(overlay)
 
-        overlay.appendChild(padding)
         overlay.appendChild(margin)
+        overlay.appendChild(padding)
         layoutLensContainer.appendChild(overlay)
     };
 
@@ -248,15 +256,22 @@ const main = () => {
     eles.forEach(ele => {
         const { tagName } = ele
         if (tagName in eleObj) eleObj[tagName](ele);
+        else addLens(ele, "#FF69B4")
     })
 }
 
 const init = message => {
+    const container = document.querySelector('.layoutlens__container')
+
     options = message
-    if (options.appToggle) main() 
-    else cleanUp()
+    
+    if (container) container.style.opacity = options.opacity
+
+    if (options.appToggle && !container) main()
+    else if (!options.appToggle && container) cleanUp()
 }
 
 runtime.onMessage.addListener(message => {
+    localStorage.setItem('layoutLensState', JSON.stringify(message))
     init(message)
 })

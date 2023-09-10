@@ -6,10 +6,10 @@ const statePromise = new Promise((resolve, reject) => {
     options = JSON.parse(localStorage.getItem('layoutLensState'))
     if (options) {
         console.log(options)
-        resolve('Layout lens options found')
+        resolve('Layout lens options found in popup')
     } else {
         options = {
-            appToggle: true,
+            appToggle: false,
             opacity: 0.5,
             currentTab: 0,
             paddingColor: "#D8A658",
@@ -54,15 +54,11 @@ const init = () => {
         const opacityLabel = document.getElementById('opacity-label')
         const opacityRange = document.getElementById('ll-opacity')
 
+        opacityRange.value = options.opacity
+        opacityLabel.innerText = `Opacity ${options.opacity}`
+
         appToggle.addEventListener('change', e => {
             toggleOption(e, "appToggle")
-
-            if (e.target.value) {
-                browserAction.enable()
-            } else {
-                browserAction.disable()
-            }
-
             localStorage.setItem('layoutLensState', JSON.stringify(options))
             sendMessage()
         })
@@ -71,6 +67,7 @@ const init = () => {
             const val = e.target.value
             options.opacity = e.target.value
             opacityLabel.innerText = `Opacity ${val}`
+            localStorage.setItem('layoutLensState', JSON.stringify(options))
             sendMessage()
         })
     })
