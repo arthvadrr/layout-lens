@@ -1,22 +1,60 @@
 const { runtime, devtools } = browser
 
-let layoutLensContainer
+let options;
 
-let options = {
-    appToggle: true,
-    opacity: 0.5,
-    currentTab: 0,
-    paddingColor: '#D8A658',
+const statePromise = new Promise((resolve, reject) => {
+    options = JSON.parse(localStorage.getItem('layoutLensState'))
+    if (options) {
+        resolve('Layout lens options found')
+    } else {
+        options = {
+            appToggle: true,
+            opacity: 0.5,
+            currentTab: 0,
+            paddingColor: "#D8A658",
+            marginColor: "#58CFD8"
+        }
+        localStorage.setItem('layoutLensState', JSON.stringify(options))
+        reject('Layout lens options set')
+    }
+})
+
+const statePromiseOnResolve = (res) => {
+    console.log(res)
+    init(options);
+}
+const statePromiseOnReject = (reason) => {
+    console.log(reason)
+    init(options);
 }
 
+statePromise.then(statePromiseOnResolve).catch(statePromiseOnReject);
+
 const cleanUp = () => {
-    const lenses = document.querySelectorAll('.layoutlens__overlay')
-    lenses.forEach(len => len.remove())
-    if (layoutLensContainer) document.removeChild(layoutLensContainer)
+    console.log('clean')
+    const layoutLensContainer = document.querySelector('.layoutlens__container')
+    if (layoutLensContainer) layoutLensContainer.remove()
+}
+
+const updateOverlayPosition = (ele, overlay) => {
+    const rect = ele.getBoundingClientRect()
+    overlay.style.top = `${rect.top}px`
+    overlay.style.left = `${rect.left}px`
 }
 
 const updateOverlayStyles = (ele, color, overlay, margin, padding) => {
     const computedStyles = window.getComputedStyle(ele)
+    const rect = ele.getBoundingClientRect()
+
+    const infoOverlay = document.createElement('div')
+    
+    overlay.innerText = `${ele.tagName}`
+
+    infoOverlay.innerText = `
+    ${ele.tagName}
+    Padding ${computedStyles.padding}
+    Margin ${computedStyles.margin}
+    `
 
     const styles = {
         padding: {
@@ -30,16 +68,26 @@ const updateOverlayStyles = (ele, color, overlay, margin, padding) => {
             bottom: computedStyles.marginBottom,
             left: computedStyles.marginLeft,
             right: computedStyles.marginRight
-        },
+        }
     }
 
     padding.style.borderBottom = `${styles.padding.bottom} solid ${options.paddingColor}`
     padding.style.borderTop = `${styles.padding.top} solid ${options.paddingColor}`
+    padding.style.borderLeft = `${styles.padding.left} solid ${options.paddingColor}`
+    padding.style.borderRight = `${styles.padding.right} solid ${options.paddingColor}`
+    margin.style.borderBottom = `${styles.margin.bottom} solid ${options.marginColor}`
+    margin.style.borderTop = `${styles.margin.top} solid ${options.marginColor}`
+    margin.style.borderLeft = `${styles.margin.left} solid ${options.marginColor}`
+    margin.style.borderRight = `${styles.margin.right} solid ${options.marginColor}`
+    overlay.style.width = `${rect.width}px`
+    overlay.style.height = `${rect.height}px`
 }
 
 const main = () => {
-    const eles = document.querySelectorAll('body *');
-    layoutLensContainer = document.createElement('div')
+    console.log('running main')
+    const eles = document.querySelectorAll('body *')
+    
+    let layoutLensContainer = document.querySelector('.layoutlens__container') || document.createElement('div')
     layoutLensContainer.classList.add('layoutlens__container')
     document.body.appendChild(layoutLensContainer)
 
@@ -55,18 +103,21 @@ const main = () => {
         margin.classList.add('layoutlens__margin')
         padding.classList.add('layoutlens__padding')
 
-        const observerConfig = {
+        const mObserverConfig = {
             attributes: true,
             attributeFilter: ['style']
         }
 
-        const observer = new MutationObserver(() => updateOverlayStyles(ele, color, overlay, margin, padding));
-        observer.observe(ele, observerConfig)
+        updateOverlayPosition(ele, overlay)
+        updateOverlayStyles(ele, color, overlay, margin, padding)
+
+        // const mObserver = new MutationObserver(() => updateOverlayStyles(ele, color, overlay, margin, padding));
+        // const iObserver = new IntersectionObserver(() => updateOverlayPosition(ele, overlay), {root: ele})
+        // mObserver.observe(ele, mObserverConfig)
+        // iObserver.observe(overlay)
 
         overlay.appendChild(padding)
         overlay.appendChild(margin)
-
-        updateOverlayStyles(ele, color, overlay, margin, padding)
         layoutLensContainer.appendChild(overlay)
     };
 
@@ -94,7 +145,7 @@ const main = () => {
         /* TEXT CONTENT */
         "BLOCKQUOTE": ele => addLens(ele, "#afff00"),
         "DD": ele => addLens(ele, "#d2ff00"),
-        "DIV": ele => addLens(ele, "#f5ff00"),
+        "DIV": ele => addLens(ele, "#2D71C818"),
         "DL": ele => addLens(ele, "#ffff00"),
         "DT": ele => addLens(ele, "#ffff3f"),
         "FIGCAPTION": ele => addLens(ele, "#ffff7f"),
@@ -202,11 +253,10 @@ const main = () => {
 
 const init = message => {
     options = message
-    cleanUp()
-    if (message.appToggle) main()
+    if (options.appToggle) main() 
+    else cleanUp()
 }
 
 runtime.onMessage.addListener(message => {
     init(message)
 })
-init(options)

@@ -1,53 +1,77 @@
 const { browserAction, runtime, tabs } = browser
 
-const options = {
-    appToggle: true,
-    opacity: 0.5,
-    currentTab: 0,
-}
+let options;
 
-const toggleOption = (e, option) => options[option] = e.target.checked ? true : false
-
-const response = () => console.log('yay')
-const err = err => console.log(err)
-
-const sendMessage = () => {
-    console.log('sending...')
-    tabs.query({
-        active:true,
-        currentWindow: true,
-    }).then(tabArr => {
-        console.log('thening...')
-        const currentTab = tabArr[0]
-        tabs.sendMessage(currentTab.id, options)
-    })
-}
-
-runtime.onMessage.addListener(message => {
-    console.log(message)
+const statePromise = new Promise((resolve, reject) => {
+    options = JSON.parse(localStorage.getItem('layoutLensState'))
+    if (options) {
+        console.log(options)
+        resolve('Layout lens options found')
+    } else {
+        options = {
+            appToggle: true,
+            opacity: 0.5,
+            currentTab: 0,
+            paddingColor: "#D8A658",
+            marginColor: "#58CFD8"
+        }
+        localStorage.setItem('layoutLensState', JSON.stringify(options))
+        reject('Layout lens options set')
+    }
 })
 
-document.addEventListener("DOMContentLoaded", () => {
-    const appToggle = document.getElementById('ll-toggle')
-    const opacityLabel = document.getElementById('opacity-label')
-    const opacityRange = document.getElementById('ll-opacity')
+const statePromiseOnResolve = (res) => {
+    console.log(res)
+    init();
+}
+const statePromiseOnReject = (reason) => {
+    console.log(reason)
+    init();
+}
 
-    appToggle.addEventListener('change', e => {
-        toggleOption(e, "appToggle")
+statePromise.then(statePromiseOnResolve).catch(statePromiseOnReject);
 
-        if (e.target.value) {
-            browserAction.enable()
-        } else {
-            browserAction.disable()
+const init = () => {
+    const toggleOption = (e, option) => options[option] = e.target.checked ? true : false
+
+    const sendMessage = () => {
+        tabs.query({
+            active:true,
+            currentWindow: true,
+        }).then(tabArr => {
+            const currentTab = tabArr[0]
+            tabs.sendMessage(currentTab.id, options)
+        })
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const appToggle = document.getElementById('ll-toggle')
+
+        if (options['appToggle'] === false) {
+            appToggle.removeAttribute('checked')
         }
 
-        sendMessage()
-    })
+        const opacityLabel = document.getElementById('opacity-label')
+        const opacityRange = document.getElementById('ll-opacity')
 
-    opacityRange.addEventListener('input', e => {
-        const val = e.target.value
-        options.opacity = e.target.value
-        opacityLabel.innerText = `Opacity ${val}`
-        sendMessage()
+        appToggle.addEventListener('change', e => {
+            toggleOption(e, "appToggle")
+
+            if (e.target.value) {
+                browserAction.enable()
+            } else {
+                browserAction.disable()
+            }
+
+            localStorage.setItem('layoutLensState', JSON.stringify(options))
+            sendMessage()
+        })
+
+        opacityRange.addEventListener('input', e => {
+            const val = e.target.value
+            options.opacity = e.target.value
+            opacityLabel.innerText = `Opacity ${val}`
+            sendMessage()
+        })
     })
-})
+}
