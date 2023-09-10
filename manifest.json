@@ -27,7 +27,8 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["./build/index.min.js"]
+      "js": ["./build/index.min.js"],
+      "css": ["index.min.css"]
     }
   ]
 }

@@ -1,3 +1,20 @@
 body {
     margin: 0;
 }
+
+.layoutlens__overlay {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    opacity: 0.1;
+    height: 100px;
+    width: 100px;
+
+    .layoutlens__padding {
+        display: block;
+        height: 100%;
+        width: 100%;
+    }
+}

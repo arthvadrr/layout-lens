@@ -1,4 +1,4 @@
-const { browserAction, runtime, tabs } = browser;
+const { browserAction, runtime, tabs } = browser
 
 const options = {
     appToggle: true,
@@ -50,4 +50,4 @@ document.addEventListener("DOMContentLoaded", () => {
         opacityLabel.innerText = `Opacity ${val}`
         sendMessage()
     })
-});
+})
