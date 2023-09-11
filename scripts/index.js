@@ -98,6 +98,9 @@ const main = () => {
     const eles = document.querySelectorAll('*')
     
     let layoutLensContainer = document.querySelector('.layoutlens__container') || document.createElement('div')
+
+    layoutLensContainer.style.opacity = options.opacity
+
     layoutLensContainer.classList.add('layoutlens__container')
     document.body.appendChild(layoutLensContainer)
 
