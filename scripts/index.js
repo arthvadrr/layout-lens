@@ -2,6 +2,19 @@ const { runtime, devtools } = browser
 
 let options;
 
+const mObserverConfig = {
+    attributes: true,
+    attributeFilter: ['style']
+}
+
+const updateOverlayPosition = (ele, overlay) => {
+    const rect = ele.getBoundingClientRect()
+    overlay.style.top = `${rect.top}px`
+    overlay.style.left = `${rect.left}px`
+}
+
+//const iObserver = new IntersectionObserver(updateOverlayPosition)
+
 const statePromise = new Promise((resolve, reject) => {
     options = JSON.parse(localStorage.getItem('layoutLensState'))
     if (options) {
@@ -36,11 +49,6 @@ const cleanUp = () => {
     if (layoutLensContainer) layoutLensContainer.remove()
 }
 
-const updateOverlayPosition = (ele, overlay) => {
-    const rect = ele.getBoundingClientRect()
-    overlay.style.top = `${rect.top}px`
-    overlay.style.left = `${rect.left}px`
-}
 
 const updateOverlayStyles = (ele, color, overlay, margin, padding) => {
     const computedStyles = window.getComputedStyle(ele)
@@ -94,13 +102,10 @@ const updateOverlayStyles = (ele, color, overlay, margin, padding) => {
 }
 
 const main = () => {
-    console.log('running main')
     const eles = document.querySelectorAll('*')
-    
+
     let layoutLensContainer = document.querySelector('.layoutlens__container') || document.createElement('div')
-
     layoutLensContainer.style.opacity = options.opacity
-
     layoutLensContainer.classList.add('layoutlens__container')
     document.body.appendChild(layoutLensContainer)
 
@@ -113,11 +118,6 @@ const main = () => {
         overlay.classList.add('layoutlens__overlay')
         margin.classList.add('layoutlens__margin')
         padding.classList.add('layoutlens__padding')
-
-        const mObserverConfig = {
-            attributes: true,
-            attributeFilter: ['style']
-        }
 
         updateOverlayPosition(ele, overlay)
         updateOverlayStyles(ele, color, overlay, margin, padding)
@@ -274,7 +274,9 @@ const init = message => {
     else if (!options.appToggle && container) cleanUp()
 }
 
-runtime.onMessage.addListener(message => {
-    localStorage.setItem('layoutLensState', JSON.stringify(message))
-    init(message)
+document.addEventListener('DOMContentLoaded', () => {
+    runtime.onMessage.addListener(message => {
+        localStorage.setItem('layoutLensState', JSON.stringify(message))
+        init(message)
+    })
 })
