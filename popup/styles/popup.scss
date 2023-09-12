@@ -1,8 +1,41 @@
 @use "fonts";
 @use "page";
 
+details {
+    width: 100%;
+
+    .element-selection {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+details > summary {
+    cursor: pointer;
+    user-select: none;
+}
 
 .form-wrapper {
+    .setters {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        button.setter {
+            border: 1px solid #7187a2;
+            background-color: #c7d4e3;
+            box-shadow: none;
+            margin: 5px;
+            color: #333333;
+            border-radius: 5px;
+            transition: background-color 120ms;
+
+            &:hover,
+            &:focus {
+                background-color: #d8e1eb;
+            }
+        }
+    }
 
     .toggle {
         display: none;

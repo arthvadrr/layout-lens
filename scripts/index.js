@@ -1,6 +1,9 @@
-const { runtime, devtools } = browser
+import defaultOptions from '../options'
+
+const { runtime } = browser
 
 let options;
+let delayedInit;
 
 const updateOverlayPosition = (ele, overlay) => {
     const rect = ele.getBoundingClientRect()
@@ -14,13 +17,7 @@ const statePromise = new Promise((resolve, reject) => {
     if (options) {
         resolve('Layout lens options found')
     } else {
-        options = {
-            appToggle: false,
-            opacity: 0.5,
-            currentTab: 0,
-            paddingColor: "#D8A658",
-            marginColor: "#58CFD8"
-        }
+        options = defaultOptions
         localStorage.setItem('layoutLensState', JSON.stringify(options))
         reject('Layout lens options set')
     }
@@ -39,6 +36,7 @@ statePromise.then(statePromiseOnResolve).catch(statePromiseOnReject);
 
 const cleanUp = () => {
     console.log('clean')
+    if (delayedInit) clearInterval(delayedInit)
     const layoutLensContainer = document.querySelector('.layoutlens__container')
     if (layoutLensContainer) layoutLensContainer.remove()
 }
@@ -102,6 +100,7 @@ const main = () => {
     document.body.appendChild(layoutLensContainer)
 
     function addLens(ele, color) {
+        if (!options.tagnames[ele.tagName]) return
         const overlay = document.createElement('div')
         const margin = document.createElement('div')
         const padding = document.createElement('div')
@@ -259,24 +258,18 @@ const main = () => {
         resizeObserver.observe(ele)
         intersectionObserver.observe(ele)
         const { tagName } = ele
-        if (tagName in eleObj) eleObj[tagName](ele);
-        else addLens(ele, "#FF69B4")
+        console.log(tagName)
+        if (tagName in eleObj && options.tagnames[`${tagName}`]) eleObj[tagName](ele);
+        else if (options.tagnames['CUSTOM ELEMENTS']) addLens(ele, "#FF69B4")
     })
 }
 
 const init = message => {
-
-    const container = document.querySelector('.layoutlens__container')
-
     options = message
-    
-    if (container) container.style.opacity = options.opacity
-
-    if (options.appToggle && !container) main()
-    else if (!options.appToggle && container) cleanUp()
+    cleanUp()
+    if (options.appToggle) main()
 }
 
-let delayedInit;
 
 const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
