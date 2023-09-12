@@ -54,14 +54,11 @@ const updateOverlayStyles = (ele, color, overlay, margin, padding) => {
     else if (fontSize < 12) fontSize = 12
 
     const infoOverlay = document.createElement('div')
-    
-    overlay.innerText = `${ele.tagName}`
+    infoOverlay.classList.add('layoutlens__info-overlay')
 
-    infoOverlay.innerText = `
-    ${ele.tagName}
-    Padding ${computedStyles.padding}
-    Margin ${computedStyles.margin}
-    `
+    infoOverlay.innerText = `${ele.tagName}`
+
+    overlay.appendChild(infoOverlay)
 
     const styles = {
         padding: {
@@ -126,15 +123,11 @@ const main = () => {
         padding.classList.add('layoutlens__padding')
 
         updateOverlayPosition(ele, overlay)
-        updateOverlayStyles(ele, color, overlay, margin, padding)
-
-        // const mObserver = new MutationObserver(() => updateOverlayStyles(ele, color, overlay, margin, padding));
-        // const iObserver = new IntersectionObserver(() => updateOverlayPosition(ele, overlay), {root: ele})
-        // mObserver.observe(ele, mObserverConfig)
-        // iObserver.observe(overlay)
-
+    
         overlay.appendChild(margin)
         overlay.appendChild(padding)
+
+        updateOverlayStyles(ele, color, overlay, margin, padding)
         layoutLensContainer.appendChild(overlay)
     };
 
