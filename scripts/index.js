@@ -13,7 +13,7 @@ const updateOverlayPosition = (ele, overlay) => {
     overlay.style.left = `${rect.left}px`
 }
 
-//const iObserver = new IntersectionObserver(updateOverlayPosition)
+const iObserver = new IntersectionObserver(updateOverlayPosition, {})
 
 const statePromise = new Promise((resolve, reject) => {
     options = JSON.parse(localStorage.getItem('layoutLensState'))
@@ -274,9 +274,7 @@ const init = message => {
     else if (!options.appToggle && container) cleanUp()
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    runtime.onMessage.addListener(message => {
-        localStorage.setItem('layoutLensState', JSON.stringify(message))
-        init(message)
-    })
+runtime.onMessage.addListener(message => {
+    localStorage.setItem('layoutLensState', JSON.stringify(message))
+    init(message)
 })
