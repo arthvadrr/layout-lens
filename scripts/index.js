@@ -2,18 +2,12 @@ const { runtime, devtools } = browser
 
 let options;
 
-const mObserverConfig = {
-    attributes: true,
-    attributeFilter: ['style']
-}
-
 const updateOverlayPosition = (ele, overlay) => {
     const rect = ele.getBoundingClientRect()
-    overlay.style.top = `${rect.top}px`
-    overlay.style.left = `${rect.left}px`
+    const { scrollY, scrollX } = window
+    overlay.style.top = `${rect.top + scrollY}px`
+    overlay.style.left = `${rect.left + scrollX}px`
 }
-
-const iObserver = new IntersectionObserver(updateOverlayPosition, {})
 
 const statePromise = new Promise((resolve, reject) => {
     options = JSON.parse(localStorage.getItem('layoutLensState'))
@@ -105,6 +99,7 @@ const main = () => {
     const eles = document.querySelectorAll('*')
 
     let layoutLensContainer = document.querySelector('.layoutlens__container') || document.createElement('div')
+
     layoutLensContainer.style.opacity = options.opacity
     layoutLensContainer.classList.add('layoutlens__container')
     document.body.appendChild(layoutLensContainer)
@@ -113,6 +108,17 @@ const main = () => {
         const overlay = document.createElement('div')
         const margin = document.createElement('div')
         const padding = document.createElement('div')
+
+        let str = ''
+        ele.classList.forEach(classname => str += `${classname} `)
+
+        if (ele.id) {
+            overlay.setAttribute('data-id', ele.id)
+        }
+        
+        if (str) {
+            overlay.setAttribute('data-class', str)
+        }
 
         overlay.setAttribute('aria-hidden', 'true')  
         overlay.classList.add('layoutlens__overlay')
@@ -257,6 +263,8 @@ const main = () => {
     }
 
     eles.forEach(ele => {
+        resizeObserver.observe(ele)
+        intersectionObserver.observe(ele)
         const { tagName } = ele
         if (tagName in eleObj) eleObj[tagName](ele);
         else addLens(ele, "#FF69B4")
@@ -264,6 +272,7 @@ const main = () => {
 }
 
 const init = message => {
+
     const container = document.querySelector('.layoutlens__container')
 
     options = message
@@ -273,6 +282,33 @@ const init = message => {
     if (options.appToggle && !container) main()
     else if (!options.appToggle && container) cleanUp()
 }
+
+let delayedInit;
+
+const resizeObserver = new ResizeObserver(entries => {
+    for (const entry of entries) {
+        if (entry.contentBoxSize) {
+            clearTimeout(delayedInit)
+            delayedInit = setTimeout(() => {
+                cleanUp()
+                main()
+            }, 100)
+        }
+    }
+})
+
+const intersectionObserver = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+        if (entry.isIntersecting) {
+            clearTimeout(delayedInit)
+            delayedInit = setTimeout(() => {
+                console.log('INTERSECT')
+                cleanUp()
+                main()
+            }, 100)
+        }
+    }
+})
 
 runtime.onMessage.addListener(message => {
     localStorage.setItem('layoutLensState', JSON.stringify(message))
