@@ -1,4 +1,4 @@
-import defaultOptions from '../options'
+import defaultOptions from '../defaultOptions'
 
 const { tabs } = browser
 
@@ -43,7 +43,6 @@ const init = () => {
             }
             options.tagnames[ele.getAttribute('data-tagname')] = toggle
         })
-        console.log(options.tagnames)
         sendMessage()
     }
 
