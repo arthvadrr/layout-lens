@@ -1,48 +1,40 @@
 class Overlay {
-    constructor(
-        ele,
-        parent,
-        marginColor,
-        paddingColor
-    ) {
+    constructor(ele, marginColor, paddingColor) {
         this.ele = ele
-        this.container = parent
         this.marginColor = marginColor
         this.paddingColor = paddingColor
     }
-
-    overlay = document.createElement('div')
     
+    overlay = document.createElement('div')
+    margin = document.createElement('div')
+    padding = document.createElement('div')
+    infoOverlay = document.createElement('div')
 
-    static updateOverlayPosition() {
+    updateOverlayPosition() {
         const { scrollY, scrollX } = window
         const rect = this.ele.getBoundingClientRect()
         this.overlay.style.top = `${rect.top + scrollY}px`
         this.overlay.style.left = `${rect.left + scrollX}px`
     }
 
-    static createOverlay() {
-        const margin = document.createElement('div')
-        const padding = document.createElement('div')
+    createOverlayStyles() {
         const computedStyles = window.getComputedStyle(this.ele)
         const rect = this.ele.getBoundingClientRect()
-        const infoOverlay = document.createElement('div')
-
         let fontSize = rect.height * 0.30;
 
-        infoOverlay.classList.add('layoutlens__info-overlay')
-        infoOverlay.innerText = `${this.ele.tagName}`
+        this.infoOverlay.classList.add('layoutlens__info-overlay')
+        this.infoOverlay.innerText = `${this.ele.tagName}`
     
-        this.overlay.appendChild(infoOverlay)
+        this.overlay.appendChild(this.infoOverlay)
     
         const styles = {
-            padding: {
+            paddingStyles: {
                 top: computedStyles.paddingTop,
                 bottom: computedStyles.paddingBottom,
                 left: computedStyles.paddingLeft,
                 right: computedStyles.paddingRight,
             },
-            margin: {
+            marginStyles: {
                 top: computedStyles.marginTop,
                 bottom: computedStyles.marginBottom,
                 left: computedStyles.marginLeft,
@@ -50,21 +42,41 @@ class Overlay {
             }
         }
     
-        padding.style.borderBottom = `${styles.padding.bottom} solid ${this.paddingColor}`
-        padding.style.borderTop = `${styles.padding.top} solid ${this.paddingColor}`
-        padding.style.borderLeft = `${styles.padding.left} solid ${this.paddingColor}`
-        padding.style.borderRight = `${styles.padding.right} solid ${this.paddingColor}`
-        padding.style.borderRadius = `${computedStyles.borderRadius}`
-        margin.style.borderBottom = `${styles.margin.bottom} solid ${this.marginColor}`
-        margin.style.borderTop = `${styles.margin.top} solid ${this.marginColor}`
-        margin.style.borderLeft = `${styles.margin.left} solid ${this.marginColor}`
-        margin.style.borderRight = `${styles.margin.right} solid ${this.marginColor}`
-        margin.style.top = `-${styles.margin.top}`
-        margin.style.left = `-${styles.margin.left}`
+        this.padding.style.borderBottom = `${styles.paddingStyles.bottom} solid ${this.paddingColor}`
+        this.padding.style.borderTop = `${styles.paddingStyles.top} solid ${this.paddingColor}`
+        this.padding.style.borderLeft = `${styles.paddingStyles.left} solid ${this.paddingColor}`
+        this.padding.style.borderRight = `${styles.paddingStyles.right} solid ${this.paddingColor}`
+        this.padding.style.borderRadius = `${computedStyles.borderRadius}`
+        this.margin.style.borderBottom = `${styles.marginStyles.bottom} solid ${this.marginColor}`
+        this.margin.style.borderTop = `${styles.marginStyles.top} solid ${this.marginColor}`
+        this.margin.style.borderLeft = `${styles.marginStyles.left} solid ${this.marginColor}`
+        this.margin.style.borderRight = `${styles.marginStyles.right} solid ${this.marginColor}`
+        this.margin.style.top = `-${styles.marginStyles.top}`
+        this.margin.style.left = `-${styles.marginStyles.left}`
         this.overlay.style.width = `${rect.width}px`
         this.overlay.style.height = `${rect.height}px`
         this.overlay.style.fontSize = `${fontSize}px`
         this.overlay.style.borderRadius = `${computedStyles.borderRadius}`
-    
-    } 
+    }
+
+    createOverlay() {
+        let str = ''
+        this.ele.classList.forEach(classname => str += `${classname} `)
+        
+        if (this.ele.id) this.overlay.setAttribute('data-id', this.ele.id)
+        if (str) this.overlay.setAttribute('data-class', str)
+        
+        this.overlay.setAttribute('aria-hidden', 'true')  
+        this.overlay.classList.add('layoutlens__overlay')
+        this.margin.classList.add('layoutlens__margin')
+        this.padding.classList.add('layoutlens__padding')
+        this.overlay.appendChild(this.margin)
+        this.overlay.appendChild(this.padding)
+        this.updateOverlayPosition()
+        this.createOverlayStyles()
+        
+        return this.overlay
+    }
 }
+
+export default Overlay

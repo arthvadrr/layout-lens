@@ -1,18 +1,10 @@
 import defaultOptions from '../defaultOptions'
-
+import Overlay from './Overlay'
 
 const { runtime } = browser
 
 let options;
 let delayedInit;
-
-const updateOverlayPosition = (ele, overlay) => {
-    const rect = ele.getBoundingClientRect()
-    const { scrollY, scrollX } = window
-    overlay.style.top = `${rect.top + scrollY}px`
-    overlay.style.left = `${rect.left + scrollX}px`
-}
-
 
 const statePromise = new Promise((resolve, reject) => {
     options = JSON.parse(localStorage.getItem('layoutLensState'))
@@ -42,55 +34,6 @@ const cleanUp = () => {
 
     const layoutLensContainer = document.querySelector('.layoutlens__container')
     if (layoutLensContainer) layoutLensContainer.remove()
-}
-
-
-const updateOverlayStyles = (ele, overlay, margin, padding) => {
-    const computedStyles = window.getComputedStyle(ele)
-    const rect = ele.getBoundingClientRect()
-
-    let fontSize = rect.height * 0.30;
-
-    if (fontSize > 22) fontSize = 22
-    else if (fontSize < 12) fontSize = 12
-
-    const infoOverlay = document.createElement('div')
-    infoOverlay.classList.add('layoutlens__info-overlay')
-
-    infoOverlay.innerText = `${ele.tagName}`
-
-    overlay.appendChild(infoOverlay)
-
-    const styles = {
-        padding: {
-            top: computedStyles.paddingTop,
-            bottom: computedStyles.paddingBottom,
-            left: computedStyles.paddingLeft,
-            right: computedStyles.paddingRight,
-        },
-        margin: {
-            top: computedStyles.marginTop,
-            bottom: computedStyles.marginBottom,
-            left: computedStyles.marginLeft,
-            right: computedStyles.marginRight,
-        }
-    }
-
-    padding.style.borderBottom = `${styles.padding.bottom} solid ${options.paddingColor}`
-    padding.style.borderTop = `${styles.padding.top} solid ${options.paddingColor}`
-    padding.style.borderLeft = `${styles.padding.left} solid ${options.paddingColor}`
-    padding.style.borderRight = `${styles.padding.right} solid ${options.paddingColor}`
-    padding.style.borderRadius = `${computedStyles.borderRadius}`
-    margin.style.borderBottom = `${styles.margin.bottom} solid ${options.marginColor}`
-    margin.style.borderTop = `${styles.margin.top} solid ${options.marginColor}`
-    margin.style.borderLeft = `${styles.margin.left} solid ${options.marginColor}`
-    margin.style.borderRight = `${styles.margin.right} solid ${options.marginColor}`
-    margin.style.top = `-${styles.margin.top}`
-    margin.style.left = `-${styles.margin.left}`
-    overlay.style.width = `${rect.width}px`
-    overlay.style.height = `${rect.height}px`
-    overlay.style.fontSize = `${fontSize}px`
-    overlay.style.borderRadius = `${computedStyles.borderRadius}`
 }
 
 const main = () => {
@@ -136,9 +79,15 @@ const main = () => {
     eles.forEach(ele => {
         resizeObserver.observe(ele)
         intersectionObserver.observe(ele)
-        const { tagName } = ele
-        if (options.tagnames[`${tagName}`]) addLens(ele, layoutLensContainer);
-        else if (options.tagnames['CUSTOM ELEMENTS']) addLens(ele, "#FF69B4")
+
+        if (
+            options.tagnames[ele.tagname] ||
+            options.tagnames['CUSTOM ELEMENTS']
+        ) layoutLensContainer.append(new Overlay(
+            ele,
+            '#ffaa33',
+            '#33cc44'
+        ).createOverlay());
     })
 }
 
