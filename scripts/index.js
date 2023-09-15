@@ -45,37 +45,6 @@ const main = () => {
     layoutLensContainer.classList.add('layoutlens__container')
     document.body.appendChild(layoutLensContainer)
 
-    function addLens(ele, container) {
-        if (!options.tagnames[ele.tagName]) return
-        const overlay = document.createElement('div')
-        const margin = document.createElement('div')
-        const padding = document.createElement('div')
-
-        let str = ''
-        ele.classList.forEach(classname => str += `${classname} `)
-
-        if (ele.id) {
-            overlay.setAttribute('data-id', ele.id)
-        }
-        
-        if (str) {
-            overlay.setAttribute('data-class', str)
-        }
-
-        overlay.setAttribute('aria-hidden', 'true')  
-        overlay.classList.add('layoutlens__overlay')
-        margin.classList.add('layoutlens__margin')
-        padding.classList.add('layoutlens__padding')
-
-        updateOverlayPosition(ele, overlay)
-    
-        overlay.appendChild(margin)
-        overlay.appendChild(padding)
-
-        updateOverlayStyles(ele, overlay, margin, padding)
-        container.appendChild(overlay)
-    };
-
     eles.forEach(ele => {
         resizeObserver.observe(ele)
         intersectionObserver.observe(ele)
