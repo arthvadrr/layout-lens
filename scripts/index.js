@@ -142,19 +142,13 @@ const main = () => {
     })
 }
 
-const init = (message = false) => {
-    if (message) options = message
-    cleanUp()
-    if (options.appToggle) main()
-}
-
 const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
         if (entry.contentBoxSize) {
             clearTimeout(delayedInit)
             delayedInit = setTimeout(() => {
                 init()
-            }, 0)
+            }, 1)
         }
     }
 })
@@ -166,10 +160,16 @@ const intersectionObserver = new IntersectionObserver(entries => {
             delayedInit = setTimeout(() => {
                 console.log('INTERSECT')
                 init()
-            }, 0)
+            }, 1)
         }
     }
 })
+
+const init = (message = false) => {
+    if (message) options = message
+    cleanUp()
+    if (options.appToggle) main()
+}
 
 runtime.onMessage.addListener(message => {
     localStorage.setItem('layoutLensState', JSON.stringify(message))
