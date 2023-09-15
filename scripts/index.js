@@ -38,8 +38,8 @@ const statePromiseOnReject = (reason) => {
 statePromise.then(statePromiseOnResolve).catch(statePromiseOnReject);
 
 const cleanUp = () => {
-    console.log('clean')
     if (delayedInit) clearInterval(delayedInit)
+
     const layoutLensContainer = document.querySelector('.layoutlens__container')
     if (layoutLensContainer) layoutLensContainer.remove()
 }
@@ -142,9 +142,8 @@ const main = () => {
     })
 }
 
-const init = message => {
-    console.table(options)
-    options = message
+const init = (message = false) => {
+    if (message) options = message
     cleanUp()
     if (options.appToggle) main()
 }
@@ -154,9 +153,8 @@ const resizeObserver = new ResizeObserver(entries => {
         if (entry.contentBoxSize) {
             clearTimeout(delayedInit)
             delayedInit = setTimeout(() => {
-                cleanUp()
-                main()
-            }, 100)
+                init()
+            }, 0)
         }
     }
 })
@@ -167,9 +165,8 @@ const intersectionObserver = new IntersectionObserver(entries => {
             clearTimeout(delayedInit)
             delayedInit = setTimeout(() => {
                 console.log('INTERSECT')
-                cleanUp()
-                main()
-            }, 100)
+                init()
+            }, 0)
         }
     }
 })
