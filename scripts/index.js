@@ -1,33 +1,28 @@
 import defaultOptions from '../defaultOptions'
 import Overlay from './Overlay'
 
-const { runtime } = browser
+const { onMessage } = browser.runtime
 
-let options;
+init()
+
+onMessage.addListener(message => init(message).catch((error) => console.log(error)))
+
 let delayedInit;
 
-const statePromise = new Promise((resolve, reject) => {
-    options = JSON.parse(localStorage.getItem('layoutLensState'))
-    if (options) {
-        resolve('Layout lens options found')
+async function init(message) {
+    let options;
+    console.log(typeof message)
+    if (typeof message === "object") {
+        options = message
+        await localStorage.setItem('layoutLensState', JSON.stringify(message))
     } else {
-        options = defaultOptions
-        console.table(options)
-        localStorage.setItem('layoutLensState', JSON.stringify(options))
-        reject('Layout lens options set')
+        options = await JSON.parse(localStorage.getItem('layoutLensState')) || defaultOptions
     }
-})
 
-const statePromiseOnResolve = (res) => {
-    console.log(res)
-    init(options);
-}
-const statePromiseOnReject = (reason) => {
-    console.log(reason)
-    init(options);
-}
+    cleanUp()
 
-statePromise.then(statePromiseOnResolve).catch(statePromiseOnReject);
+    if (options.appToggle) main(options)
+}
 
 const cleanUp = () => {
     if (delayedInit) clearInterval(delayedInit)
@@ -36,7 +31,7 @@ const cleanUp = () => {
     if (layoutLensContainer) layoutLensContainer.remove()
 }
 
-const main = () => {
+const main = options => {
     const eles = document.querySelectorAll('*')
 
     let layoutLensContainer = document.querySelector('.layoutlens__container') || document.createElement('div')
@@ -81,15 +76,4 @@ const intersectionObserver = new IntersectionObserver(entries => {
             }, 1)
         }
     }
-})
-
-const init = (message = false) => {
-    if (message) options = message
-    cleanUp()
-    if (options.appToggle) main()
-}
-
-runtime.onMessage.addListener(message => {
-    localStorage.setItem('layoutLensState', JSON.stringify(message))
-    init(message)
 })
