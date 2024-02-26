@@ -45,7 +45,7 @@ const main = options => {
         intersectionObserver.observe(ele)
 
         if (
-            options.tagnames[ele.tagname] ||
+            options.tagnames[ele.tagName] ||
             options.tagnames['CUSTOM ELEMENTS']
         ) layoutLensContainer.append(new Overlay(
             ele,
