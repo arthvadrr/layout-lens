@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+}
+
+.layoutlens__container {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    //pointer-events: none;
+    backdrop-filter: blur(3px);
+    z-index: 999999999999999999; // ON TOP DAMNIT
+    transform: perspective(1000px) rotateX(50deg) rotateY(10deg);
+    transform-style: preserve-3d;
+
+    .layoutlens__overlay {
+        display: flex;
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        color: #333333;
+        border: 1px dashed #444444;
+        box-shadow: 0 10px 20px #333;
+
+        .layoutlens__padding,
+        .layoutlens__margin {
+            position: absolute;
+            box-sizing: border-box;
+            display: block;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .layoutlens__margin {
+            box-sizing: content-box;
+        }
+
+        .layoutlens__info-overlay {
+            display: inline;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 3px;
+            position: relative;
+            opacity: 0.95;
+        }
+    }
+}

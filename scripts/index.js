@@ -86,7 +86,6 @@ const intersectionObserver = new IntersectionObserver(entries => {
         if (entry.isIntersecting) {
             clearTimeout(delayedInit);
             delayedInit = setTimeout(() => {
-                console.log('INTERSECT');
                 init();
             }, 1);
         }
