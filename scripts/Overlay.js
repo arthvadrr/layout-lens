@@ -9,6 +9,7 @@ class Overlay {
     margin = document.createElement('div');
     padding = document.createElement('div');
     infoOverlay = document.createElement('div');
+    draggableOverlay = document.createElement('div');
 
     updateOverlayPosition() {
         const { scrollY, scrollX } = window;

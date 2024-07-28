@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
     <head>
         <title>Layout Lens Menu</title>
-        <link rel="stylesheet" href="popup.min.css">
+        <link rel="stylesheet" href="popup.min.css" />
     </head>
 
     <body>
@@ -11,11 +10,15 @@
         <div class="options">
             <form class="popup-form">
                 <div class="form-wrapper">
-                    <input id="ll-toggle" name="ll-toggle" class="toggle" type="checkbox" checked>
+                    <input id="ll-toggle" name="ll-toggle" class="toggle" type="checkbox" checked />
                     <label for="ll-toggle" class="toggle-label">Toggle Layout Lens</label>
                 </div>
                 <div class="form-wrapper">
-                    <input id="ll-opacity" name="ll-opacity" type="range" start="0.5" min="0" max="1" step=".1">
+                    <input id="toggle-3d" name="toggle-3d" class="toggle" type="checkbox" />
+                    <label for="toggle-3d" class="toggle-label">Enable 3D (drag the page to rotate/skew)</label>
+                </div>
+                <div class="form-wrapper">
+                    <input id="ll-opacity" name="ll-opacity" type="range" start="0.5" min="0" max="1" step=".1" />
                     <label id="opacity-label" for="ll-opacity">Opacity 0.5</label>
                 </div>
                 <div class="setters">
@@ -30,5 +33,4 @@
         </div>
         <script src="popup.min.js"></script>
     </body>
-
 </html>

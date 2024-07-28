@@ -47,7 +47,7 @@ const cleanUp = () => {
  * @param {Object} options - The options for setting up the overlay.
  */
 const main = options => {
-    const eles = document.querySelectorAll('*');
+    const eles = document.querySelectorAll('body *');
 
     let layoutLensContainer = document.querySelector('.layoutlens__container') || document.createElement('div');
 

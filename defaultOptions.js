@@ -4,6 +4,7 @@ const defaultOptions = {
     currentTab: 0,
     paddingColor: '#D8A658',
     marginColor: '#58CFD8',
+    view3d: false,
     tagnames: {
         HTML: true,
         BODY: true,
