@@ -2,6 +2,31 @@ body {
     margin: 0;
 }
 
+:root {
+    --overlay-width: 200px;
+    --overlay-height: 200px;
+    --font-size: 1rem;
+    --border-radius: 5px;
+}
+
+.layoutlens__overlay {
+    position: absolute;
+    width: var(--overlay-width);
+    height: var(--overlay-height);
+    font-size: var(--font-size);
+    border-radius: var(--border-radius);
+}
+
+.layoutlens__padding {
+    border-style: solid;
+    border-color: transparent; /* Color applied dynamically */
+}
+
+.layoutlens__margin {
+    border-style: solid;
+    border-color: transparent; /* Color applied dynamically */
+}
+
 .layoutlens__container {
     width: 100vw;
     height: 100vh;

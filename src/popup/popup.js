@@ -1,4 +1,4 @@
-import defaultOptions from '../defaultOptions';
+import defaultOptions from '../defaultOptions.js';
 
 const { tabs } = browser;
 
