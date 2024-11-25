@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5" clip-rule="evenodd" viewBox="0 0 400 400">
+    <path fill="none" stroke="#535728" stroke-width="5" d="m49.99 299.94 50.07 49.99L50.08 400 0 350.01zm0-100.07 50.07 50-49.98 50.07L0 249.95zm0-100.06 50.07 49.99-49.98 50.07L0 149.9z"/>
+    <path fill="none" stroke="#535728" stroke-width="5" d="m49.99 0 50.07 50-49.98 50.07L0 50.07zm100.06 0 50.08 50-50 50.07-50.07-50z"/>
+    <path fill="none" stroke="#535728" stroke-width="5" d="m150.05 99.81 50.08 49.99-50 50.07-50.07-49.98zm0 100.19 50.08 50-50 50.07-50.07-50z"/>
+    <path fill="none" stroke="#535728" stroke-width="5" d="m249.99 199.87 50.07 50-49.98 50.07L200 249.95zm.13-100.06 50.07 49.99-49.99 50.07-50.07-49.98z"/>
+    <path fill="none" stroke="#535728" stroke-width="5" d="m250.12 0 50.07 50-49.99 50.07-50.07-50zm100.06 0 50.08 50-50 50.07-50.07-50zm-.26 100.07L400 150.06l-49.99 50.07-50.07-49.99z"/>
+    <path fill="none" stroke="#535728" stroke-width="5" d="m350.18 199.87 50.08 50-50 50.07-50.07-49.99zM150.05 299.94l50.08 49.99-50 50.07-50.07-49.99zm100.07 0 50.07 49.99L250.2 400l-50.07-49.99zm100.06 0 50.08 49.99-50 50.07-50.07-49.99z"/>
+</svg>

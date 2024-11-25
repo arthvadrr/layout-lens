@@ -19,6 +19,7 @@ const resizeObserver = new ResizeObserver(entries => {
 	for (const entry of entries) {
 		if (entry.contentBoxSize) {
 			// TODO Figure out how to resize specific elements
+			//init();
 		}
 	}
 });
@@ -30,6 +31,7 @@ const intersectionObserver = new IntersectionObserver(entries => {
 	for (const entry of entries) {
 		if (entry.isIntersecting) {
 			// TODO Figure out how to re-position specific elements
+			//init();
 		}
 	}
 }, intersectionObserverOptions);
@@ -49,8 +51,6 @@ async function init(message) {
 	let options;
 	const localOptions = JSON.parse(localStorage.getItem('layoutLensState'));
 
-	console.log('message', message);
-
 	if (message) {
 		options = message;
 	} else if (localOptions) {
@@ -62,8 +62,6 @@ async function init(message) {
 	if (options) {
 		localStorage.setItem('layoutLensState', JSON.stringify(options));
 	}
-
-	console.log('OPTIONS', options);
 
 	if (options.appToggle) {
 		cleanUp(false);

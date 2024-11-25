@@ -6,33 +6,9 @@ body {
     --overlay-width: 200px;
     --overlay-height: 200px;
     --font-size: 1rem;
-    --border-radius: 5px;
-}
-
-.layoutlens__overlay {
-    position: absolute;
-    width: var(--overlay-width);
-    height: var(--overlay-height);
-    font-size: var(--font-size);
-    border-radius: var(--border-radius);
-}
-
-.layoutlens__padding {
-    border-style: solid;
-    border-color: transparent; /* Color applied dynamically */
-}
-
-.layoutlens__margin {
-    border-style: solid;
-    border-color: transparent; /* Color applied dynamically */
 }
 
 .layoutlens__container {
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
     z-index: 99999999;
     //transform-style: preserve-3d;
     //transform: perspective(1000px) rotateX(50deg) rotateY(10deg);
@@ -40,35 +16,74 @@ body {
     .layoutlens__overlay {
         display: flex;
         position: absolute;
+        width: var(--overlay-width);
+        height: var(--overlay-height);
+        font-size: var(--font-size);
+        background-color: transparent;
         justify-content: center;
         align-items: center;
         align-content: center;
         color: #333333;
-        border: 1px dashed #444444;
-        box-shadow: 0 10px 20px #333;
-
-        .layoutlens__padding,
-        .layoutlens__margin {
-            position: absolute;
-            box-sizing: border-box;
-            display: block;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            left: 0;
-        }
-
-        .layoutlens__margin {
-            box-sizing: content-box;
-        }
 
         .layoutlens__info-overlay {
-            display: inline;
-            background-color: #fff;
-            border-radius: 5px;
+            background-color: transparent;
             padding: 3px;
             position: relative;
-            opacity: 0.95;
+            color: transparent;
         }
+    }
+
+    .layoutlens__padding {
+        border-style: solid;
+        border-color: transparent;
+    }
+
+    .layoutlens__margin {
+        position: absolute;
+        background-image: url("../src/assets/shadowbox-opt.svg");
+        background-size: 25px 25px;
+        background-repeat: repeat;
+        background-color: rgba(#9CA54C, 0.75);
+        color: #000;
+
+        &:hover,
+        &:focus {
+            .layoutlens__marginInfo {
+                opacity: 1;
+            }
+        }
+    }
+
+    .layoutlens__marginInfo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(#CAD18E, 0.75);
+        padding: 2px;
+        border: 1px dotted #3D4026;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.1s ease;
+    }
+
+    .layoutlens__marginTop {
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .layoutlens__marginBottom {
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .layoutlens__marginLeft {
+        left: 0;
+    }
+
+    .layoutlens__marginRight {
+        right: 0;
     }
 }
